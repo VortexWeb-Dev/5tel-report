@@ -119,6 +119,8 @@ try {
             ];
         }, $result['result']['items']),
         'total' => $total,
+        'total_earnings' => array_sum(array_column($result['result']['items'], 'ufCrm9EarningsLocalCurrency')),
+        'total_commission' => array_sum(array_column($result['result']['items'], 'ufCrm9CommissionAmount')),
         'from' => $offset + 1,
         'to' => min($offset + $per_page, $total),
         'current_page' => $page,

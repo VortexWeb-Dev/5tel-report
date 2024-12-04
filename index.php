@@ -1,3 +1,7 @@
+<?php
+include_once(__DIR__ . '/utils/index.php');
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -118,9 +122,9 @@
                         <th class="px-4 py-3">
                             <div class="flex items-center justify-between">
                                 <span>Responsible Person</span>
-                                <?php
-                                $responsible_person_order = $_GET['responsible_person_order'] ?? 'desc';
-                                ?>
+                                <!-- <?php
+                                        $responsible_person_order = $_GET['responsible_person_order'] ?? 'desc';
+                                        ?>
                                 <a href="?responsible_person_order=<?php echo $responsible_person_order === 'asc' ? 'desc' : 'asc' ?>">
                                     <svg class="w-4 h-4 <?php echo $responsible_person_order === 'asc' ? 'hidden' : '' ?>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
@@ -128,7 +132,7 @@
                                     <svg class="w-4 h-4 <?php echo $responsible_person_order === 'desc' ? 'hidden' : '' ?>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                     </svg>
-                                </a>
+                                </a> -->
                             </div>
                         </th>
                         <th class="px-4 py-3">
@@ -220,8 +224,8 @@
                 </div>
 
                 <div class="flex-1 min-w-[250px] p-4 border rounded-lg shadow-sm bg-blue-50">
-                    <div class="text-sm text-blue-700">Earnings - Local Currency</div>
-                    <div class="text-2xl font-bold text-blue-900">36,061</div>
+                    <div class="text-sm text-blue-700"><?php echo isAdmin() ? 'Earnings - Local Currency' : 'Commission Amount' ?></div>
+                    <div id="totalEarnings" class="text-2xl font-bold text-blue-900">0</div>
                 </div>
             </div>
         </div>
@@ -252,7 +256,6 @@
                 if (data.error) {
                     throw new Error(data.message);
                 }
-                // console.log(data);
 
                 return data;
             } catch (error) {
@@ -290,6 +293,13 @@
             // Update pagination text
             document.getElementById('paginationText').textContent =
                 `${data.from} - ${data.to} / ${data.total}`;
+
+            //update the total earnings
+            const totalEarningsElement = document.getElementById('totalEarnings');
+            const isAdmin = '<?php echo isAdmin() ?>';
+            const totalEarnings = data.total_earnings;
+            const totalCommission = data.total_commission;
+            totalEarningsElement.textContent = isAdmin ? totalEarnings.toFixed(2) : totalCommission.toFixed(2);
         }
 
         const urlParams = new URLSearchParams(window.location.search);
