@@ -190,8 +190,6 @@
                     <div class="flex gap-2">
                         <select class="block w-full border-b rounded-md border-gray-300 shadow-sm focus:outline-none py-2 pl-3 pr-10 text-sm">
                             <option>Equals</option>
-                            <option>Contains</option>
-                            <option>Starts with</option>
                         </select>
                         <input type="text" name="mid" class="block w-full border-b rounded-md border-gray-300 shadow-sm focus:outline-none sm:text-sm" placeholder="Enter a value">
                     </div>
@@ -215,7 +213,7 @@
                         <select class="block w-full border-b rounded-md border-gray-300 shadow-sm focus:outline-none py-2 pl-3 pr-10 text-sm">
                             <option>Equals</option>
                             <option>Contains</option>
-                            <option>Starts with</option>    
+                            <option>Starts with</option>
                         </select>
                         <input type="text" name="statement_month" class="block w-full border-b rounded-md border-gray-300 shadow-sm focus:outline-none sm:text-sm" placeholder="Enter a value">
                     </div>
@@ -236,7 +234,7 @@
         async function fetchData(page = 1, filters = {}) {
             try {
                 console.log(filters);
-                
+
                 setLoading(true); // Show loader
 
                 const queryParams = new URLSearchParams({
@@ -295,22 +293,15 @@
         }
 
         const urlParams = new URLSearchParams(window.location.search);
-        const order_filters = {};
+        const filters = {};
 
         urlParams.forEach((value, key) => {
-            if (key.endsWith('_operator')) {
-                order_filters[key.replace('_operator', '')] = {
-                    value,
-                    operator: urlParams.get(`${key}_operator`),
-                };
-            } else {
-                order_filters[key] = value;
-            }
+            filters[key] = value;
         });
 
         // Initial load
         async function init() {
-            const data = await fetchData(1, order_filters);
+            const data = await fetchData(currentPage, filters);
             if (data) {
                 renderTable(data);
             }
@@ -319,7 +310,6 @@
         init();
 
         // Add event listeners for filters
-        const filters = {};
         document.querySelectorAll('input').forEach(input => {
             input.addEventListener('keydown', async (e) => {
                 if (e.key === 'Enter') {
@@ -330,9 +320,9 @@
                     filters[`${filterType}_operator`] = operator;
 
                     console.log(filters);
-                    
 
-                    const data = await fetchData(1, filters);
+
+                    const data = await fetchData(currentPage, filters);
                     if (data) {
                         currentPage = 1;
                         renderTable(data);

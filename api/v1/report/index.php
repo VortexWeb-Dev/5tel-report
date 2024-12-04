@@ -60,11 +60,12 @@ foreach ($orderFields as $field) {
 
 try {
     // Call to Bitrix24 REST API
+    $actualFIlter = isAdmin() ? $filter : [...$filter, 'assignedById' => getCurrentUser()];
     $result = CRest::call(
         'crm.item.list',
         [
             'entityTypeId' => ENTITY_TYPE_ID,
-            'filter' => $filter,
+            'filter' => $actualFIlter,
             'order' => $order,
             'select' => [
                 'ID',

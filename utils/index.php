@@ -29,6 +29,11 @@ function getUser($id)
     return $result['result'][0]; // Return first user since result is an array
 }
 
+function getCurrentUser(){
+    $result = CRest::call('user.current')['result'];
+    return $result['ID'];
+}
+
 function getResponsiblePerson($user_id)
 {
     $user = getUser($user_id);
@@ -61,6 +66,13 @@ function field_map($field)
         default:
             return $field;
     }
+}
+
+function isAdmin()
+{
+    $user_id = getCurrentUser();
+    if ($user_id === '1' || $user_id === '13') return true;
+    return false;
 }
 
 // map enum with the values
