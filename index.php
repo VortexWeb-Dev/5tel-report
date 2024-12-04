@@ -193,7 +193,7 @@
                             <option>Contains</option>
                             <option>Starts with</option>
                         </select>
-                        <input type="text" class="block w-full border-b rounded-md border-gray-300 shadow-sm focus:outline-none sm:text-sm" placeholder="Enter a value">
+                        <input type="text" name="mid" class="block w-full border-b rounded-md border-gray-300 shadow-sm focus:outline-none sm:text-sm" placeholder="Enter a value">
                     </div>
                 </div>
 
@@ -205,7 +205,7 @@
                             <option>Contains</option>
                             <option>Starts with</option>
                         </select>
-                        <input type="text" class="block w-full border-b rounded-md border-gray-300 shadow-sm focus:outline-none sm:text-sm" placeholder="Enter a value">
+                        <input type="text" name="dba" class="block w-full border-b rounded-md border-gray-300 shadow-sm focus:outline-none sm:text-sm" placeholder="Enter a value">
                     </div>
                 </div>
 
@@ -217,7 +217,7 @@
                             <option>Contains</option>
                             <option>Starts with</option>    
                         </select>
-                        <input type="text" class="block w-full border-b rounded-md border-gray-300 shadow-sm focus:outline-none sm:text-sm" placeholder="Enter a value">
+                        <input type="text" name="statement_month" class="block w-full border-b rounded-md border-gray-300 shadow-sm focus:outline-none sm:text-sm" placeholder="Enter a value">
                     </div>
                 </div>
 
@@ -321,17 +321,22 @@
         // Add event listeners for filters
         const filters = {};
         document.querySelectorAll('input').forEach(input => {
-            input.addEventListener('input', async (e) => {
-                const filterType = e.target.closest('div').querySelector('label').textContent.toLowerCase();
-                const operator = e.target.previousElementSibling.value.toLowerCase();
+            input.addEventListener('keydown', async (e) => {
+                if (e.key === 'Enter') {
+                    const filterType = e.target.name.toLowerCase();
+                    const operator = e.target.previousElementSibling.value.toLowerCase();
 
-                filters[filterType] = e.target.value;
-                filters[`${filterType}_operator`] = operator;
+                    filters[filterType] = e.target.value;
+                    filters[`${filterType}_operator`] = operator;
 
-                const data = await fetchData(1, filters);
-                if (data) {
-                    currentPage = 1;
-                    renderTable(data);
+                    console.log(filters);
+                    
+
+                    const data = await fetchData(1, filters);
+                    if (data) {
+                        currentPage = 1;
+                        renderTable(data);
+                    }
                 }
             });
         });
