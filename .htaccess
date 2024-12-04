@@ -1,0 +1,11 @@
+RewriteEngine On
+
+# Handle API requests
+RewriteRule ^api/v1/report/?$ api/v1/report/index.php [L,QSA]
+
+# If the above doesn't match, check if the file/directory exists
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# If not found, redirect to index.php
+RewriteRule ^ index.php [L] 
