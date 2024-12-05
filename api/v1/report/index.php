@@ -25,7 +25,7 @@ $offset = ($page - 1) * $per_page;
 $filter = [];
 
 // Handle filters from query parameters
-$filterFields = ['mid', 'dba', 'statement_month'];
+$filterFields = ['mid', 'dba'];
 foreach ($filterFields as $field) {
     if (isset($_GET[$field]) && !empty($_GET[$field])) {
         $operator = $_GET[$field . '_operator'] ?? 'equals';
@@ -41,6 +41,20 @@ foreach ($filterFields as $field) {
                 $filter[field_map($field)] = $_GET[$field];
         }
     }
+}
+
+if (isset($_GET['statement_month'], $_GET['statement_year']) && !empty($_GET['statement_month']) && !empty($_GET['statement_year'])) {
+    $dateArray = [];
+    for ($i = 1; $i <= 30; $i++) {
+        if ($i < 10) {
+            $dateElemet = $_GET['statement_year'] . '0' . $i . ' ' . $_GET['statement_month'];
+            array_push($dateArray, $dateElemet);
+        } else {
+            $dateElemet = $_GET['statement_year'] . $i . ' ' .  $_GET['statement_month'];
+            array_push($dateArray, $dateElemet);
+        }
+    }
+    $filter['@' . field_map('statement_month')] = $dateArray;
 }
 
 $order = [];
