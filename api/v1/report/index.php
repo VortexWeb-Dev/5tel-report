@@ -2,12 +2,9 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-require_once($_SERVER['DOCUMENT_ROOT'] . '/crest/settings.php');
-require_once($_SERVER['DOCUMENT_ROOT'] . '/crest/crest.php');
-require_once($_SERVER['DOCUMENT_ROOT'] . '/utils/index.php');
-// require_once(__DIR__ . '../../../../crest/crest.php');
-// require_once(__DIR__ . '../../../../crest/settings.php');
-// require_once(__DIR__ . '../../../../utils/index.php');
+require_once(__DIR__ . '../../../../crest/crest.php');
+require_once(__DIR__ . '../../../../crest/settings.php');
+require_once(__DIR__ . '../../../../utils/index.php');
 
 // Handle CORS if needed
 header('Content-Type: application/json');
