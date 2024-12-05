@@ -183,7 +183,7 @@ include_once(__DIR__ . '/utils/index.php');
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                         </svg>
                     </button>
-                    <button class="p-2 rounded hover:bg-gray-100" aria-label="Next page">
+                    <button class="p-2 rounded hover:bg-gray-100" aria-label="Next page" id="nextPageButton">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
@@ -370,6 +370,7 @@ include_once(__DIR__ . '/utils/index.php');
     <script>
         let currentPage = 1;
         const perPage = 50;
+        let totalPages = 1;
 
         async function fetchData(page = 1, filters = {}) {
             try {
@@ -429,6 +430,8 @@ include_once(__DIR__ . '/utils/index.php');
             // Update pagination text
             document.getElementById('paginationText').textContent =
                 `${data.from} - ${data.to} / ${data.total}`;
+                
+            totalPages = Math.ceil(data.total / perPage);
 
             //update the total earnings
             const totalEarningsElement = document.getElementById('totalEarnings');
@@ -454,28 +457,6 @@ include_once(__DIR__ . '/utils/index.php');
         }
 
         init();
-
-        // Add event listeners for filters
-        // document.querySelectorAll('input').forEach(input => {
-        //     input.addEventListener('keydown', async (e) => {
-        //         if (e.key === 'Enter') {
-        //             const filterType = e.target.name.toLowerCase();
-        //             const operator = e.target.previousElementSibling.value.toLowerCase();
-
-        //             filters[filterType] = e.target.value;
-        //             filters[`${filterType}_operator`] = operator;
-
-        //             console.log(filters);
-
-
-        //             const data = await fetchData(currentPage, filters);
-        //             if (data) {
-        //                 currentPage = 1;
-        //                 renderTable(data);
-        //             }
-        //         }
-        //     });
-        // });
 
         let timeout;
         document.querySelectorAll('input').forEach(input => {
@@ -513,7 +494,7 @@ include_once(__DIR__ . '/utils/index.php');
                 const statementYear = document.getElementById('statement_year').value;
 
                 if (statementMonth && statementYear) {
-                    console.log(statementMonth, statementYear);
+                    // console.log(statementMonth, statementYear);
                     filters['statement_month'] = statementMonth;
                     filters['statement_year'] = statementYear;
                 } else {
@@ -535,9 +516,11 @@ include_once(__DIR__ . '/utils/index.php');
         });
 
         nextButton.addEventListener('click', async () => {
-            currentPage++;
-            const data = await fetchData(currentPage, filters);
-            if (data) renderTable(data);
+            if (currentPage < totalPages) {
+                currentPage++;
+                const data = await fetchData(currentPage, filters);
+                if (data) renderTable(data);
+            }
         });
 
         // Add this function after the renderTable function
