@@ -60,7 +60,7 @@ if (isset($_GET['statement_month'], $_GET['statement_year']) && !empty($_GET['st
 $order = [];
 
 // handle order from query parameters
-$orderFields = ['statement_month_order', 'mid_order', 'dba_order', 'sales_volume_order', 'sales_trxn_order', 'commission_amount_order', 'responsible_person_order', 'earnings_order'];
+$orderFields = ['statement_month_order', 'mid_order', 'dba_order', 'sales_volume_order', 'sales_trxn_order', 'commission_order', 'responsible_person_order', 'earnings_local_currency_order'];
 foreach ($orderFields as $field) {
     if (isset($_GET[$field]) && !empty($_GET[$field])) {
         $cur_order = $_GET[$field] === 'asc' ? 'asc' : 'desc';

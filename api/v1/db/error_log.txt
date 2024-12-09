@@ -1,0 +1,136 @@
+[2024-12-09 11:18:16] ERROR: Failed to fetch transactions. SQL Error: ERROR:  syntax error at or near ","
+LINE 3:                 Array, 
+                             ^
+[2024-12-09 11:57:25] ERROR: Failed to fetch transactions. SQL Error: ERROR:  column "earnings" does not exist
+LINE 9:             ORDER BY earnings asc
+                             ^
+[2024-12-09 11:59:41] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 11:59:54] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 12:01:30] ERROR: Failed to fetch transactions. SQL Error: ERROR:  syntax error at or near "$1"
+LINE 8:             WHERE statement_month IN $1
+                                             ^
+[2024-12-09 12:19:32] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 12:19:40] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 12:20:02] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 12:20:06] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 12:20:17] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 12:22:07] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 12:22:14] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 12:22:26] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 12:22:41] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 12:23:01] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 12:23:08] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 12:24:18] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 12:24:49] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 12:25:10] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 12:31:42] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 12:33:48] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 12:34:04] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 12:36:24] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 12:36:43] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 12:40:16] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 12:40:22] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 12:40:29] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 12:43:55] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 12:44:11] ERROR: Failed to fetch transactions. SQL Error: ERROR:  function lower(unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown) does not exist
+LINE 8: ...ba) LIKE LOWER($1) AND LOWER(statement_month) IN (LOWER($2, ...
+                                                             ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+[2024-12-09 12:44:17] ERROR: Failed to fetch transactions. SQL Error: ERROR:  function lower(unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown) does not exist
+LINE 8:             WHERE LOWER(statement_month) IN (LOWER($1, $2, $...
+                                                     ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+[2024-12-09 12:44:20] ERROR: Failed to fetch transactions. SQL Error: ERROR:  function lower(unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown) does not exist
+LINE 8:             WHERE LOWER(statement_month) IN (LOWER($1, $2, $...
+                                                     ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+[2024-12-09 12:45:05] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 12:45:36] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 12:47:12] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 12:49:31] ERROR: Failed to fetch transactions. SQL Error: ERROR:  function lower(unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown, unknown) does not exist
+LINE 8:             WHERE LOWER(statement_month) IN (LOWER($1, $2, $...
+                                                     ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+[2024-12-09 12:51:50] ERROR: Failed to fetch transactions. SQL Error: ERROR:  function lower(integer) does not exist
+LINE 8:             WHERE LOWER(responsible_person_bitrix_id) = LOWE...
+                          ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+[2024-12-09 12:52:00] ERROR: Failed to fetch transactions. SQL Error: ERROR:  function lower(integer) does not exist
+LINE 8:             WHERE LOWER(responsible_person_bitrix_id) = LOWE...
+                          ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+[2024-12-09 12:55:47] ERROR: Failed to fetch transactions. SQL Error: ERROR:  function lower(integer) does not exist
+LINE 8:             WHERE LOWER(responsible_person_bitrix_id) = LOWE...
+                          ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+[2024-12-09 12:58:14] ERROR: Failed to fetch transactions. SQL Error: ERROR:  function lower(integer) does not exist
+LINE 8:             WHERE LOWER(responsible_person_bitrix_id) = LOWE...
+                          ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+[2024-12-09 13:00:33] ERROR: Failed to fetch transactions. SQL Error: ERROR:  function lower(integer) does not exist
+LINE 8:             WHERE LOWER(responsible_person_bitrix_id) = LOWE...
+                          ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+[2024-12-09 13:01:07] ERROR: Failed to fetch transactions. SQL Error: ERROR:  function lower(integer) does not exist
+LINE 8:             WHERE LOWER(responsible_person_bitrix_id) = LOWE...
+                          ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+[2024-12-09 13:06:34] ERROR: Failed to fetch transactions. SQL Error: ERROR:  function lower(integer) does not exist
+LINE 8:             WHERE LOWER(responsible_person_bitrix_id) = LOWE...
+                          ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+[2024-12-09 13:07:19] ERROR: Failed to fetch transactions. SQL Error: ERROR:  function lower(integer) does not exist
+LINE 8:             WHERE LOWER(responsible_person_bitrix_id) = LOWE...
+                          ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+[2024-12-09 13:07:23] ERROR: Failed to fetch transactions. SQL Error: ERROR:  function lower(integer) does not exist
+LINE 8:             WHERE LOWER(responsible_person_bitrix_id) = LOWE...
+                          ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+[2024-12-09 13:07:34] ERROR: Failed to fetch transactions. SQL Error: ERROR:  function lower(integer) does not exist
+LINE 8:             WHERE LOWER(responsible_person_bitrix_id) = LOWE...
+                          ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+[2024-12-09 13:08:20] ERROR: Failed to fetch transactions. SQL Error: ERROR:  function lower(integer) does not exist
+LINE 8:             WHERE LOWER(responsible_person_bitrix_id) = LOWE...
+                          ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+[2024-12-09 13:09:47] ERROR: Failed to fetch transactions. SQL Error: ERROR:  function lower(integer) does not exist
+LINE 8:             WHERE LOWER(responsible_person_bitrix_id) = LOWE...
+                          ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+[2024-12-09 13:11:43] ERROR: Failed to fetch transactions. SQL Error: ERROR:  function lower(integer) does not exist
+LINE 8:             WHERE LOWER(responsible_person_bitrix_id) = LOWE...
+                          ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+[2024-12-09 13:14:58] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 13:15:10] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 13:15:14] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 13:15:23] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 13:15:52] ERROR: Failed to fetch transactions. SQL Error: ERROR:  function lower(integer) does not exist
+LINE 8:             WHERE LOWER(responsible_person_bitrix_id) = $1
+                          ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+[2024-12-09 13:16:01] ERROR: Failed to fetch transactions. SQL Error: ERROR:  function lower(integer) does not exist
+LINE 8:             WHERE LOWER(responsible_person_bitrix_id) = $1
+                          ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+[2024-12-09 13:16:27] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 13:16:43] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 13:17:20] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-09 13:17:46] ERROR: Failed to fetch transactions. SQL Error: ERROR:  function lower(integer) does not exist
+LINE 8:             WHERE LOWER(responsible_person_bitrix_id) = $1
+                          ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+[2024-12-09 13:18:51] ERROR: Failed to fetch transactions. SQL Error: ERROR:  function lower(integer) does not exist
+LINE 8:             WHERE LOWER(responsible_person_bitrix_id) = $1
+                          ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+[2024-12-09 13:18:55] ERROR: Failed to fetch transactions. SQL Error: ERROR:  function lower(integer) does not exist
+LINE 8:             WHERE LOWER(responsible_person_bitrix_id) = $1
+                          ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+[2024-12-09 13:19:24] ERROR: Failed to fetch transactions. SQL Error: ERROR:  function lower(integer) does not exist
+LINE 8:             WHERE LOWER(responsible_person_bitrix_id) = $1
+                          ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.

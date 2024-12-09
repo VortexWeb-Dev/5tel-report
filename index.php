@@ -110,13 +110,13 @@ include_once(__DIR__ . '/utils/index.php');
                                 <div class="flex items-center justify-between">
                                     <span>Commission Amount</span>
                                     <?php
-                                    $commission_amount_order = $_GET['commission_amount_order'] ?? 'desc';
+                                    $commission_order = $_GET['commission_order'] ?? 'desc';
                                     ?>
-                                    <a href="?commission_amount_order=<?php echo $commission_amount_order === 'asc' ? 'desc' : 'asc' ?>">
-                                        <svg class="w-4 h-4 <?php echo $commission_amount_order === 'asc' ? 'hidden' : '' ?>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <a href="?commission_order=<?php echo $commission_order === 'asc' ? 'desc' : 'asc' ?>">
+                                        <svg class="w-4 h-4 <?php echo $commission_order === 'asc' ? 'hidden' : '' ?>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
                                         </svg>
-                                        <svg class="w-4 h-4 <?php echo $commission_amount_order === 'desc' ? 'hidden' : '' ?>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-4 h-4 <?php echo $commission_order === 'desc' ? 'hidden' : '' ?>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                         </svg>
                                     </a>
@@ -142,13 +142,13 @@ include_once(__DIR__ . '/utils/index.php');
                                 <div class="flex items-center justify-between">
                                     <span>Earnings</span>
                                     <?php
-                                    $earnings_order = $_GET['earnings_order'] ?? 'desc';
+                                    $earnings_local_currency_order = $_GET['earnings_local_currency_order'] ?? 'desc';
                                     ?>
-                                    <a href="?earnings_order=<?php echo $earnings_order === 'asc' ? 'desc' : 'asc' ?>">
-                                        <svg class="w-4 h-4 <?php echo $earnings_order === 'asc' ? 'hidden' : '' ?>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <a href="?earnings_local_currency_order=<?php echo $earnings_local_currency_order === 'asc' ? 'desc' : 'asc' ?>">
+                                        <svg class="w-4 h-4 <?php echo $earnings_local_currency_order === 'asc' ? 'hidden' : '' ?>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
                                         </svg>
-                                        <svg class="w-4 h-4 <?php echo $earnings_order === 'desc' ? 'hidden' : '' ?>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-4 h-4 <?php echo $earnings_local_currency_order === 'desc' ? 'hidden' : '' ?>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                         </svg>
                                     </a>
@@ -384,7 +384,7 @@ include_once(__DIR__ . '/utils/index.php');
                     ...filters
                 });
 
-                const response = await fetch(`${window.location.origin}/api/v1/report?${queryParams}`);
+                const response = await fetch(`${window.location.origin}/api/v1/db?${queryParams}`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -430,15 +430,15 @@ include_once(__DIR__ . '/utils/index.php');
             // Update pagination text
             document.getElementById('paginationText').textContent =
                 `${data.from} - ${data.to} / ${data.total}`;
-                
+
             totalPages = Math.ceil(data.total / perPage);
 
             //update the total earnings
             const totalEarningsElement = document.getElementById('totalEarnings');
             const isAdmin = '<?php echo isAdmin() ?>';
-            const totalEarnings = data.total_earnings;
-            const totalCommission = data.total_commission;
-            totalEarningsElement.textContent = isAdmin ? totalEarnings.toFixed(2) : totalCommission.toFixed(2);
+            const totalEarnings = Number(data.total_earnings).toFixed(2);
+            const totalCommission = Number(data.total_commission).toFixed(2);
+            totalEarningsElement.textContent = isAdmin ? totalEarnings : totalCommission;
         }
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -464,7 +464,8 @@ include_once(__DIR__ . '/utils/index.php');
                 clearTimeout(timeout);
                 timeout = setTimeout(async () => {
                     const filterType = input.previousElementSibling.value.toLowerCase();
-                    const operator = filterType == 'mid' ? 'equals' : 'contains';
+                    // const operator = filterType == 'mid' ? 'equals' : 'contains';  // for bitrix
+                    const operator = 'contains';
 
                     if (filterType == 'mid' && filters.hasOwnProperty('dba')) {
                         delete filters['dba'];

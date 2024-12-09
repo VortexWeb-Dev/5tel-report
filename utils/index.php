@@ -71,7 +71,7 @@ function field_map($field)
 function isAdmin()
 {
     $user_id = getCurrentUser();
-    if ($user_id === '1' || $user_id === '13') return true;
+    if ($user_id === '1') return true;
     return false;
 }
 
