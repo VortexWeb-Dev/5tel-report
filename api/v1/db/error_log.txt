@@ -139,3 +139,9 @@ HINT:  No function matches the given name and argument types. You might need to 
 [2024-12-11 08:05:02] ERROR: Failed to fetch transactions. SQL Error: 
 [2024-12-11 08:05:25] ERROR: Failed to fetch transactions. SQL Error: 
 [2024-12-11 08:06:29] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-27 05:56:30] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-27 05:57:24] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-27 05:57:25] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-27 05:59:10] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-27 05:59:12] ERROR: Failed to fetch transactions. SQL Error: 
+[2024-12-27 05:59:20] ERROR: Failed to fetch transactions. SQL Error: 

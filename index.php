@@ -64,28 +64,18 @@ include_once(__DIR__ . '/utils/index.php');
                         ];
 
                         tableHeaderData.forEach((item, index) => {
-                            function toggleSortOrder(data) {
-                                const urlParams = new URLSearchParams(window.location.search);
-                                const sortOrder = urlParams.get(`${data}_order`);
-                                const arrowUp = document.querySelector(`[data-${data}-order="asc"]`);
-                                const arrowDown = document.querySelector(`[data-${data}-order="desc"]`);
-                                arrowUp.classList.toggle('hidden');
-                                arrowDown.classList.toggle('hidden');
-                                updateUrlParam(`${data}_order`, sortOrder === 'asc' ? 'desc' : 'asc');
-                            }
-
                             var th = `
                                 <th class="px-4 py-3">
                                     <div class="flex items-center justify-between">
                                         <span>${item.title}</span>
-                                        <a href="javascript:;" onclick="toggleSortOrder('${item.data}')">
+                                        <button type="button" onclick="toggleSortOrder('${item.data}')">
                                             <svg class="w-4 h-4" data-${item.data}-order="asc" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
                                             </svg>
                                             <svg class="w-4 h-4 hidden" data-${item.data}-order="desc" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                             </svg>
-                                        </a>
+                                        </button>
                                     </div>
                                 </th>
                             `;
@@ -380,8 +370,20 @@ include_once(__DIR__ . '/utils/index.php');
 
         const filters = {};
 
+        function toggleSortOrder(data) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const sortOrder = urlParams.get(`${data}_order`);
+            const arrowUp = document.querySelector(`[data-${data}-order="asc"]`);
+            const arrowDown = document.querySelector(`[data-${data}-order="desc"]`);
+            arrowUp.classList.toggle('hidden');
+            arrowDown.classList.toggle('hidden');
+            updateUrlParam(`${data}_order`, sortOrder === 'asc' ? 'desc' : 'asc');
+        }
+
         async function updateUrlParam(key, value) {
             const params = new URLSearchParams(window.location.search);
+            console.log(params);
+
             // delete other order filters
             params.forEach((value, key) => {
                 if (key !== value) {
