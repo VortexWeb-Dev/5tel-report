@@ -5,6 +5,6 @@ return [
         'dbname' => 'commission-db',
         'user' => 'commission-db_owner',
         'password' => 'HBYZdp7fNgv8',
+        'endpoint' => 'ep-delicate-meadow-a107967b'
     ],
 ];
-?>
