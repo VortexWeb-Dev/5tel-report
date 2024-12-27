@@ -1,5 +1,6 @@
 <?php
 require_once(__DIR__ . '/../crest/crest.php');
+require_once(__DIR__ . '/../crest/crestcurrent.php');
 require_once(__DIR__ . '/../crest/settings.php');
 
 function getUsers($filter = [])
@@ -30,7 +31,7 @@ function getUser($id)
 }
 
 function getCurrentUser(){
-    $result = CRest::call('user.current')['result'];
+    $result = CRestCurrent::call('user.current')['result'];
     return $result['ID'];
 }
 

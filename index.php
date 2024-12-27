@@ -26,171 +26,73 @@ include_once(__DIR__ . '/utils/index.php');
                                     <span>#</span>
                                 </div>
                             </th>
-                            <th class="px-4 py-3">
-                                <div class="flex items-center justify-between">
-                                    <span>Statement Month</span>
-                                    <a href="javascript:;" onclick="
-                                        var urlParams = new URLSearchParams(window.location.search);
-                                        var statement_order = urlParams.get('statement_month_order');
-                                        var arrowUp = document.querySelector(`[data-statement-month-order='asc']`);
-                                        var arrowDown = document.querySelector(`[data-statement-month-order='desc']`);
-                                        arrowUp.classList.toggle('hidden');
-                                        arrowDown.classList.toggle('hidden');
-                                        updateUrlParam('statement_month_order', statement_order === 'asc' ? 'desc' : 'asc')
-                                    ">
-                                        <svg class="w-4 h-4" data-statement-month-order="asc" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                                        </svg>
-                                        <svg class="w-4 h-4 hidden" data-statement-month-order="desc" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                        </svg>
-                                    </a>
-                                </div>
-                            </th>
-                            <th class="px-4 py-3">
-                                <div class="flex items-center justify-between">
-                                    <span>MID</span>
-                                    <a href="javascript:;" onclick="
-                                        var urlParams = new URLSearchParams(window.location.search);
-                                        var mid_order = urlParams.get('mid_order');
-                                        var arrowUp = document.querySelector(`[data-mid-order='asc']`);
-                                        var arrowDown = document.querySelector(`[data-mid-order='desc']`);
-                                        arrowUp.classList.toggle('hidden');
-                                        arrowDown.classList.toggle('hidden');
-                                        updateUrlParam('mid_order', mid_order === 'asc' ? 'desc' : 'asc')
-                                        ">
-                                        <svg class="w-4 h-4" data-mid-order="asc" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                                        </svg>
-                                        <svg class="w-4 h-4 hidden" data-mid-order="desc" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                        </svg>
-                                    </a>
-                                </div>
-                            </th>
-                            <th class="px-4 py-3">
-                                <div class="flex items-center justify-between">
-                                    <span>DBA</span>
-                                    <a href="javascript:;" onclick="
-                                        var urlParams = new URLSearchParams(window.location.search);
-                                        var dba_order = urlParams.get('dba_order');
-                                        var arrowUp = document.querySelector(`[data-dba-order='asc']`);
-                                        var arrowDown = document.querySelector(`[data-dba-order='desc']`);
-                                        arrowUp.classList.toggle('hidden');
-                                        arrowDown.classList.toggle('hidden');
-                                        updateUrlParam('dba_order', dba_order === 'asc' ? 'desc' : 'asc')
-                                        ">
-                                        <svg class="w-4 h-4" data-dba-order="asc" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                                        </svg>
-                                        <svg class="w-4 h-4 hidden" data-dba-order="desc" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                        </svg>
-                                    </a>
-                                </div>
-                            </th>
-                            <th class="px-4 py-3">
-                                <div class="flex items-center justify-between">
-                                    <span>Sales Volume</span>
-                                    <a href="javascript:;" onclick="
-                                        var urlParams = new URLSearchParams(window.location.search);
-                                        var sales_volume_order = urlParams.get('sales_volume_order');
-                                        var arrowUp = document.querySelector(`[data-sales_volume-order='asc']`);
-                                        var arrowDown = document.querySelector(`[data-sales_volume-order='desc']`);
-                                        arrowUp.classList.toggle('hidden');
-                                        arrowDown.classList.toggle('hidden');
-                                        updateUrlParam('sales_volume_order', sales_volume_order === 'asc' ? 'desc' : 'asc')
-                                        ">
-                                        <svg class="w-4 h-4" data-sales_volume-order="asc" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                                        </svg>
-                                        <svg class="w-4 h-4 hidden" data-sales_volume-order="desc" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                        </svg>
-                                    </a>
-                                </div>
-                            </th>
-                            <th class="px-4 py-3">
-                                <div class="flex items-center justify-between">
-                                    <span>Sales Transaction</span>
-                                    <a href="javascript:;" onclick="
-                                        var urlParams = new URLSearchParams(window.location.search);
-                                        var sales_trxn_order = urlParams.get('sales_trxn_order');
-                                        var arrowUp = document.querySelector(`[data-sales_trxn-order='asc']`);
-                                        var arrowDown = document.querySelector(`[data-sales_trxn-order='desc']`);
-                                        arrowUp.classList.toggle('hidden');
-                                        arrowDown.classList.toggle('hidden');
-                                        updateUrlParam('sales_trxn_order', sales_trxn_order === 'asc' ? 'desc' : 'asc')
-                                        ">
-                                        <svg class="w-4 h-4" data-sales_trxn-order="asc" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                                        </svg>
-                                        <svg class="w-4 h-4 hidden" data-sales_trxn-order="desc" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                        </svg>
-                                    </a>
-                                </div>
-                            </th>
-                            <th class="px-4 py-3">
-                                <div class="flex items-center justify-between">
-                                    <span>Commission Amount</span>                    
-                                    <a href="javascript:;" onclick="
-                                        var urlParams = new URLSearchParams(window.location.search);
-                                        var commission_order = urlParams.get('commission_order');
-                                        var arrowUp = document.querySelector(`[data-commission-order='asc']`);
-                                        var arrowDown = document.querySelector(`[data-commission-order='desc']`);
-                                        arrowUp.classList.toggle('hidden');
-                                        arrowDown.classList.toggle('hidden');
-                                        updateUrlParam('commission_order', commission_order === 'asc' ? 'desc' : 'asc')
-                                        ">
-                                        <svg class="w-4 h-4" data-commission-order="asc" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                                        </svg>
-                                        <svg class="w-4 h-4 hidden" data-commission-order="desc" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                        </svg>
-                                    </a>
-                                </div>
-                            </th>
-                            <th class="px-4 py-3">
-                                <div class="flex items-center justify-between">
-                                    <span>Responsible Person</span>
-                                    <!-- <?php
-                                            $responsible_person_order = $_GET['responsible_person_order'] ?? 'desc';
-                                            ?>
-                                <a href="?responsible_person_order=<?php echo $responsible_person_order === 'asc' ? 'desc' : 'asc' ?>">
-                                    <svg class="w-4 h-4 <?php echo $responsible_person_order === 'asc' ? 'hidden' : '' ?>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                                    </svg>
-                                    <svg class="w-4 h-4 <?php echo $responsible_person_order === 'desc' ? 'hidden' : '' ?>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                    </svg>
-                                </a> -->
-                                </div>
-                            </th>
-                            <th class="px-4 py-3">
-                                <div class="flex items-center justify-between">
-                                    <span>Earnings</span>
-                                    <a href="javascript:;" onclick="
-                                        var urlParams = new URLSearchParams(window.location.search);
-                                        var earnings_local_currency_order = urlParams.get('earnings_local_currency_order');
-                                        var arrowUp = document.querySelector(`[data-earnings_local_currency-order='asc']`);
-                                        var arrowDown = document.querySelector(`[data-earnings_local_currency-order='desc']`);
-                                        arrowUp.classList.toggle('hidden');
-                                        arrowDown.classList.toggle('hidden');
-                                        updateUrlParam('earnings_local_currency_order', earnings_local_currency_order === 'asc' ? 'desc' : 'asc')
-                                        ">
-                                        <svg class="w-4 h-4" data-earnings_local_currency-order="asc" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                                        </svg>
-                                        <svg class="w-4 h-4 hidden" data-earnings_local_currency-order="desc" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                        </svg>
-                                    </a>
-                                </div>
-                            </th>
                         </tr>
                     </thead>
+                    <script>
+                        const tableHeaderData = [{
+                                title: 'Statement Month',
+                                data: 'statement_month'
+                            },
+                            {
+                                title: 'MID',
+                                data: 'mid'
+                            },
+                            {
+                                title: 'DBA',
+                                data: 'dba'
+                            },
+                            {
+                                title: 'Sales Volume',
+                                data: 'sales_volume'
+                            },
+                            {
+                                title: 'Sales Transaction',
+                                data: 'sales_trxn'
+                            },
+                            {
+                                title: 'Commission Amount',
+                                data: 'commission_amount'
+                            },
+                            {
+                                title: 'Responsible Person',
+                                data: 'responsible_person'
+                            },
+                            {
+                                title: 'Earnings',
+                                data: 'earnings_local_currency'
+                            }
+                        ];
+
+                        tableHeaderData.forEach((item, index) => {
+                            function toggleSortOrder(data) {
+                                const urlParams = new URLSearchParams(window.location.search);
+                                const sortOrder = urlParams.get(`${data}_order`);
+                                const arrowUp = document.querySelector(`[data-${data}-order="asc"]`);
+                                const arrowDown = document.querySelector(`[data-${data}-order="desc"]`);
+                                arrowUp.classList.toggle('hidden');
+                                arrowDown.classList.toggle('hidden');
+                                updateUrlParam(`${data}_order`, sortOrder === 'asc' ? 'desc' : 'asc');
+                            }
+
+                            var th = `
+                                <th class="px-4 py-3">
+                                    <div class="flex items-center justify-between">
+                                        <span>${item.title}</span>
+                                        <a href="javascript:;" onclick="toggleSortOrder('${item.data}')">
+                                            <svg class="w-4 h-4" data-${item.data}-order="asc" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                            </svg>
+                                            <svg class="w-4 h-4 hidden" data-${item.data}-order="desc" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </th>
+                            `;
+
+                            document.querySelector('thead > tr').insertAdjacentHTML('beforeend', th);
+                        })
+                    </script>
                     <tbody id="tableBody">
                         <!-- Data will be populated by JavaScript -->
                     </tbody>
