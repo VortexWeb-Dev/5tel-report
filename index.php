@@ -17,7 +17,7 @@ include_once(__DIR__ . '/utils/index.php');
     <div class="w-11/12 grid grid-cols-8 gap-4">
         <!-- table -->
         <div class="col-span-6 bg-white p-4 rounded-lg shadow">
-            <div class="overflow-x-auto overflow-y-auto min-h-[600px] max-h-[600px]">
+            <div class="overflow-x-auto overflow-y-auto min-h-[500px] max-h-[500px]">
                 <table class="w-full text-sm text-left">
                     <thead class="w-full bg-gray-100 text-gray-700 sticky top-0">
                         <tr>
@@ -88,7 +88,7 @@ include_once(__DIR__ . '/utils/index.php');
                     </tbody>
                     <tbody id="tableLoader" class="hidden">
                         <tr>
-                            <td colspan="9" class="h-[600px]">
+                            <td colspan="9" class="h-[500px]">
                                 <div class="flex justify-center items-center h-full">
                                     <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
                                     <span class="ml-3 text-gray-600">Loading data...</span>
@@ -105,12 +105,12 @@ include_once(__DIR__ . '/utils/index.php');
                     1 - 50 / 16162
                 </div>
                 <div class="flex gap-2">
-                    <button class="p-2 rounded hover:bg-gray-100" aria-label="Previous page">
+                    <button id="prevPageButton" class="p-2 rounded hover:bg-gray-100" aria-label="Previous page">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                         </svg>
                     </button>
-                    <button class="p-2 rounded hover:bg-gray-100" aria-label="Next page" id="nextPageButton">
+                    <button id="nextPageButton" class="p-2 rounded hover:bg-gray-100" aria-label="Next page" id="nextPageButton">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
@@ -471,9 +471,15 @@ include_once(__DIR__ . '/utils/index.php');
         });
 
         // Add event listeners for pagination
-        const [prevButton, nextButton] = document.querySelectorAll('button');
+        const prevButton = document.getElementById('prevPageButton');
+        const nextButton = document.getElementById('nextPageButton');
+
+        console.log(prevButton, nextButton);
+        
 
         prevButton.addEventListener('click', async () => {
+            console.log('currentPage', currentPage);
+            
             if (currentPage > 1) {
                 currentPage--;
                 const data = await fetchData(currentPage, filters);

@@ -1,6 +1,6 @@
 <?php
-//define('C_REST_CLIENT_ID','local.5c8bb1b0891cf2.87252039');//Application ID
-//define('C_REST_CLIENT_SECRET','SakeVG5mbRdcQet45UUrt6q72AMTo7fkwXSO7Y5LYFYNCRsA6f');//Application key
+// define('C_REST_CLIENT_ID','local.67739348994958.80669341');//Application ID
+// define('C_REST_CLIENT_SECRET','68zBxP5UBfBeIevYxRlCFPNUyeJ74yNWrPotwPrLnLwD0OIRKc');//Application key
 // or
 define('C_REST_WEB_HOOK_URL','https://5tel.bitrix24.uk/rest/13/bq7arhlt29j4yu6c/');//url on creat Webhook
 
