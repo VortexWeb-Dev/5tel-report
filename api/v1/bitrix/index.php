@@ -2,145 +2,185 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-require_once(__DIR__ . '../../../../crest/crest.php');
-require_once(__DIR__ . '../../../../crest/settings.php');
-require_once(__DIR__ . '../../../../utils/index.php');
+require_once __DIR__ . '/../../../crest/crest.php';
+require_once __DIR__ . '/../../../crest/settings.php';
+require_once __DIR__ . '/../../../utils/index.php';
 
-// Handle CORS if needed
+const DEFAULT_PAGE = 1;
+const DEFAULT_PER_PAGE = 50;
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Log request details for debugging
 error_log("API Request received: " . $_SERVER['REQUEST_URI']);
-error_log("Query parameters: " . print_r($_GET, true));
+error_log("Query parameters: " . json_encode($_GET));
 
-// Get query parameters
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$per_page = isset($_GET['per_page']) ? (int)$_GET['per_page'] : 50;
-$offset = ($page - 1) * $per_page;
+function field_map($field)
+{
+    $fieldMap = [
+        'statement_month' => 'ufCrm9StatementMonth',
+        'mid' => 'ufCrm9Mid',
+        'dba' => 'ufCrm9Dba',
+        'sales_volume' => 'ufCrm9SalesVolume',
+        'sales_trxn' => 'ufCrm9SalesTrxn',
+        'commission' => 'ufCrm9CommissionAmount',
+        'responsible_person' => 'assignedById',
+        'earnings_local_currency' => 'ufCrm9EarningsLocalCurrency'
+    ];
+    return $fieldMap[$field] ?? $field;
+}
 
-// Initialize filter array for Bitrix
-$filter = [];
+function build_date_filter($year, $month)
+{
+    $dates = [];
+    for ($day = 1; $day <= 30; $day++) {
+        $formattedDay = str_pad($day, 2, '0', STR_PAD_LEFT);
+        $dates[] = "$year$formattedDay $month";
+    }
+    return $dates;
+}
 
-// Handle filters from query parameters
-$filterFields = ['mid', 'dba'];
-foreach ($filterFields as $field) {
-    if (isset($_GET[$field]) && !empty($_GET[$field])) {
-        $operator = $_GET[$field . '_operator'] ?? 'equals';
+function process_filters()
+{
+    $filters = [];
+    $filterFields = ['mid', 'dba'];
 
-        switch ($operator) {
-            case 'contains':
-                $filter[field_map($field)] = '%' . $_GET[$field] . '%';
-                break;
-            case 'starts with':
-                $filter[field_map($field)] = $_GET[$field] . '%';
-                break;
-            default: // equals
-                $filter[field_map($field)] = $_GET[$field];
+    foreach ($filterFields as $field) {
+        if (!empty($_GET[$field])) {
+            $operator = $_GET[$field . '_operator'] ?? 'equals';
+            $value = $_GET[$field];
+
+            switch ($operator) {
+                case 'contains':
+                    $filters[field_map($field)] = '%' . $value . '%';
+                    break;
+                case 'starts with':
+                    $filters[field_map($field)] = $value . '%';
+                    break;
+                default:
+                    $filters[field_map($field)] = $value;
+            }
         }
     }
+
+    if (!empty($_GET['statement_month']) && !empty($_GET['statement_year'])) {
+        $dates = build_date_filter($_GET['statement_year'], $_GET['statement_month']);
+        $filters['@' . field_map('statement_month')] = $dates;
+    }
+
+    return isAdmin() ? $filters : array_merge($filters, ['assignedById' => getCurrentUser()]);
 }
 
-if (isset($_GET['statement_month'], $_GET['statement_year']) && !empty($_GET['statement_month']) && !empty($_GET['statement_year'])) {
-    $dateArray = [];
-    for ($i = 1; $i <= 30; $i++) {
-        if ($i < 10) {
-            $dateElemet = $_GET['statement_year'] . '0' . $i . ' ' . $_GET['statement_month'];
-            array_push($dateArray, $dateElemet);
-        } else {
-            $dateElemet = $_GET['statement_year'] . $i . ' ' .  $_GET['statement_month'];
-            array_push($dateArray, $dateElemet);
+function process_order()
+{
+    $order = [];
+    $orderFields = [
+        'statement_month_order',
+        'mid_order',
+        'dba_order',
+        'sales_volume_order',
+        'sales_trxn_order',
+        'commission_order',
+        'responsible_person_order',
+        'earnings_local_currency_order'
+    ];
+
+    foreach ($orderFields as $field) {
+        if (!empty($_GET[$field])) {
+            $fieldName = str_replace('_order', '', $field);
+            $order[field_map($fieldName)] = strtolower($_GET[$field]) === 'asc' ? 'asc' : 'desc';
         }
     }
-    $filter['@' . field_map('statement_month')] = $dateArray;
+    return $order;
 }
 
-$order = [];
+function get_responsible_person_map()
+{
+    $users = getUsers();
+    $map = [];
 
-// handle order from query parameters
-$orderFields = ['statement_month_order', 'mid_order', 'dba_order', 'sales_volume_order', 'sales_trxn_order', 'commission_order', 'responsible_person_order', 'earnings_local_currency_order'];
-foreach ($orderFields as $field) {
-    if (isset($_GET[$field]) && !empty($_GET[$field])) {
-        $cur_order = $_GET[$field] === 'asc' ? 'asc' : 'desc';
-        $field = str_replace('_order', '', $field);
-        $order[field_map($field)] = $cur_order;
+    foreach ($users as $user) {
+        $fullName = trim(implode(' ', array_filter([
+            $user['NAME'] ?? '',
+            $user['SECOND_NAME'] ?? '',
+            $user['LAST_NAME'] ?? ''
+        ])));
+        $map[$user['ID']] = $fullName;
     }
+    return $map;
 }
 
-try {
-    // Call to Bitrix24 REST API
-    $actualFIlter = isAdmin() ? $filter : [...$filter, 'assignedById' => getCurrentUser()];
-    $result = CRest::call(
-        'crm.item.list',
-        [
-            'entityTypeId' => ENTITY_TYPE_ID,
-            'filter' => $actualFIlter,
-            'order' => $order,
-            'select' => [
-                'ID',
-                'ufCrm9StatementMonth',
-                'ufCrm9Mid', // Sales Volume
-                'ufCrm9Dba',
-                'ufCrm9SalesVolume',
-                'ufCrm9SalesTrxn',
-                'ufCrm9CommissionAmount',
-                'assignedById',
-                'ufCrm9EarningsLocalCurrency'
-            ],
-            'start' => $offset,
-        ]
-    );
+function format_response($items, $responsiblePersonMap, $total, $offset, $per_page, $page)
+{
+    $data = array_map(function ($item) use ($responsiblePersonMap) {
+        return [
+            'statement_month' => $item['ufCrm9StatementMonth'] ?? '',
+            'mid' => $item['ufCrm9Mid'] ?? '',
+            'dba' => $item['ufCrm9Dba'] ?? '',
+            'sales_volume' => $item['ufCrm9SalesVolume'] ?? '',
+            'sales_trxn' => $item['ufCrm9SalesTrxn'] ?? '',
+            'commission_amount' => $item['ufCrm9CommissionAmount'] ?? '',
+            'responsible_person' => $responsiblePersonMap[$item['assignedById']] ?? '',
+            'earnings' => $item['ufCrm9EarningsLocalCurrency'] ?? ''
+        ];
+    }, $items);
 
-    if (isset($result['error'])) {
-        throw new Exception($result['error_description']);
-    }
-
-    // Get total count
-    $total = $result['total'];
-
-    $global_users = getUsers();
-    $responsiblePersonMap = [];
-    foreach ($global_users as $user) {
-        $fname = $user['NAME'] ?? '';
-        $lname = $user['LAST_NAME'] ?? '';
-        $sname = $user['SECOND_NAME'] ?? '';
-        $fullname = $fname . ' ' . $sname . ' ' . $lname;
-
-        $responsiblePersonMap[$user['ID']] = $fullname;
-    }
-
-    // echo "<pre>";
-    // print_r($responsiblePersonMap);
-    // echo "</pre>";
-    // Format response
-    $response = [
-        'data' => array_map(function ($data) use ($responsiblePersonMap) {
-            $responsible_person = $responsiblePersonMap[$data['assignedById']] ?? '';
-            return [
-                'statement_month' => $data['ufCrm9StatementMonth'],
-                'mid' => $data['ufCrm9Mid'],
-                'dba' => $data['ufCrm9Dba'],
-                'sales_volume' => $data['ufCrm9SalesVolume'],
-                'sales_trxn' => $data['ufCrm9SalesTrxn'],
-                'commission_amount' => $data['ufCrm9CommissionAmount'],
-                'responsible_person' => $responsible_person,
-                'earnings' => $data['ufCrm9EarningsLocalCurrency'],
-            ];
-        }, $result['result']['items']),
+    return [
+        'data' => $data,
         'total' => $total,
-        'total_earnings' => array_sum(array_column($result['result']['items'], 'ufCrm9EarningsLocalCurrency')),
-        'total_commission' => array_sum(array_column($result['result']['items'], 'ufCrm9CommissionAmount')),
+        'total_earnings' => array_sum(array_column($items, 'ufCrm9EarningsLocalCurrency')),
+        'total_commission' => array_sum(array_column($items, 'ufCrm9CommissionAmount')),
         'from' => $offset + 1,
         'to' => min($offset + $per_page, $total),
         'current_page' => $page,
         'per_page' => $per_page,
-        'last_page' => ceil($total / $per_page)
+        'last_page' => (int)ceil($total / $per_page)
     ];
+}
+
+try {
+    $page = (int)($_GET['page'] ?? DEFAULT_PAGE);
+    $per_page = (int)($_GET['per_page'] ?? DEFAULT_PER_PAGE);
+    $offset = ($page - 1) * $per_page;
+
+    $filters = process_filters();
+    $order = process_order();
+
+    $result = CRest::call('crm.item.list', [
+        'entityTypeId' => ENTITY_TYPE_ID,
+        'filter' => $filters,
+        'order' => $order,
+        'select' => [
+            'ID',
+            'ufCrm9StatementMonth',
+            'ufCrm9Mid',
+            'ufCrm9Dba',
+            'ufCrm9SalesVolume',
+            'ufCrm9SalesTrxn',
+            'ufCrm9CommissionAmount',
+            'assignedById',
+            'ufCrm9EarningsLocalCurrency'
+        ],
+        'start' => $offset,
+    ]);
+
+    if (isset($result['error'])) {
+        throw new Exception($result['error_description'] ?? 'Unknown API error');
+    }
+
+    $responsiblePersonMap = get_responsible_person_map();
+    $response = format_response(
+        $result['result']['items'],
+        $responsiblePersonMap,
+        $result['total'],
+        $offset,
+        $per_page,
+        $page
+    );
 
     echo json_encode($response);
-    // echo $response;
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode([

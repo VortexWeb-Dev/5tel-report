@@ -2,17 +2,16 @@
 
 class Transaction
 {
-    private $db;
+    private PDO $db;
     private $logger;
 
-    public function __construct($db, $logger)
+    public function __construct(PDO $db, $logger)
     {
         $this->db = $db;
         $this->logger = $logger;
     }
 
-    // CREATE operation
-    public function create($data)
+    public function create(array $data)
     {
         $sql = "
             INSERT INTO transaction (
@@ -20,236 +19,191 @@ class Transaction
                 open_date, tier_code, card_plan, first_batch_date, base_msc_rate, base_msc_pi, 
                 ex_rate, ex_pi, int_lc, asmt_lc, base_msc_amt, exception_msc_amt, msc_amt, 
                 sales_volume, sales_trxn, plan, primary_rate, secondary_rate, residual_per_item, 
-                revenue_share, earnings_local_currency, commission, responsible_person, responsible_person_bitrix_id
+                revenue_share, earnings_local_currency, commission, responsible_person, 
+                responsible_person_bitrix_id
             ) VALUES (
-                $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, 
-                $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31
-            )
-        ";
+                :statement_month, :mid, :dba, :status, :local_currency, :entity, :sales_rep_code, 
+                :open_date, :tier_code, :card_plan, :first_batch_date, :base_msc_rate, :base_msc_pi, 
+                :ex_rate, :ex_pi, :int_lc, :asmt_lc, :base_msc_amt, :exception_msc_amt, :msc_amt, 
+                :sales_volume, :sales_trxn, :plan, :primary_rate, :secondary_rate, :residual_per_item, 
+                :revenue_share, :earnings_local_currency, :commission, :responsible_person, 
+                :responsible_person_bitrix_id
+            )";
 
-        $params = [
-            $data['statement_month'] ?? null,
-            $data['mid'] ?? null,
-            $data['dba'] ?? null,
-            $data['status'] ?? null,
-            $data['local_currency'] ?? null,
-            $data['entity'] ?? null,
-            $data['sales_rep_code'] ?? null,
-            $data['open_date'] ?? null,
-            $data['tier_code'] ?? null,
-            $data['card_plan'] ?? null,
-            $data['first_batch_date'] ?? null,
-            $data['base_msc_rate'] ?? null,
-            $data['base_msc_pi'] ?? null,
-            $data['ex_rate'] ?? null,
-            $data['ex_pi'] ?? null,
-            $data['int_lc'] ?? null,
-            $data['asmt_lc'] ?? null,
-            $data['base_msc_amt'] ?? null,
-            $data['exception_msc_amt'] ?? null,
-            $data['msc_amt'] ?? null,
-            $data['sales_volume'] ?? null,
-            $data['sales_trxn'] ?? null,
-            $data['plan'] ?? null,
-            $data['primary_rate'] ?? null,
-            $data['secondary_rate'] ?? null,
-            $data['residual_per_item'] ?? null,
-            $data['revenue_share'] ?? null,
-            $data['earnings_local_currency'] ?? null,
-            $data['commission'] ?? null,
-            $data['responsible_person'] ?? null,
-            $data['responsible_person_bitrix_id'] ?? null
-        ];
+        $params = array_map(fn($key) => $data[$key] ?? null, [
+            'statement_month',
+            'mid',
+            'dba',
+            'status',
+            'local_currency',
+            'entity',
+            'sales_rep_code',
+            'open_date',
+            'tier_code',
+            'card_plan',
+            'first_batch_date',
+            'base_msc_rate',
+            'base_msc_pi',
+            'ex_rate',
+            'ex_pi',
+            'int_lc',
+            'asmt_lc',
+            'base_msc_amt',
+            'exception_msc_amt',
+            'msc_amt',
+            'sales_volume',
+            'sales_trxn',
+            'plan',
+            'primary_rate',
+            'secondary_rate',
+            'residual_per_item',
+            'revenue_share',
+            'earnings_local_currency',
+            'commission',
+            'responsible_person',
+            'responsible_person_bitrix_id'
+        ]);
 
         try {
-            $result = pg_query_params($this->db->getConnection(), $sql, $params);
-
-            if ($result) {
-                $this->logger->logInfo("New transaction created for MID: {$data['mid']}");
-                return pg_last_oid($result);
-            }
-
-            $this->logger->logError("Failed to create transaction. SQL Error: " . pg_last_error($this->db->getConnection()));
-            return false;
-        } catch (Exception $e) {
-            $this->logger->logError("Exception in transaction creation: " . $e->getMessage());
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(array_combine(
+                array_map(fn($key) => ":$key", array_keys($data)),
+                $params
+            ));
+            $this->logger->info("New transaction created for MID: {$data['mid']}");
+            return $this->db->lastInsertId();
+        } catch (PDOException $e) {
+            $this->logger->error("Transaction creation error: " . $e->getMessage());
             return false;
         }
     }
 
-    // READ operation by ID
-    public function getById($id)
+    public function getById(int $id): ?array
     {
-        $sql = "SELECT * FROM transaction WHERE id = $1";
-
+        $sql = "SELECT * FROM transaction WHERE id = :id";
         try {
-            $result = pg_query_params($this->db->getConnection(), $sql, [$id]);
-
-            if ($result) {
-                $transaction = pg_fetch_assoc($result);
-                if ($transaction) {
-                    $this->logger->logInfo("Transaction fetched with ID: {$id}");
-                    return $transaction;
-                } else {
-                    $this->logger->logWarning("No transaction found with ID: {$id}");
-                    return null;
-                }
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([':id' => $id]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($row) {
+                $this->logger->info("Transaction fetched with ID: $id");
+                return $row;
             }
-
-            $this->logger->logError("Failed to fetch transaction. SQL Error: " . pg_last_error($this->db->getConnection()));
+            $this->logger->warning("No transaction found with ID: $id");
             return null;
-        } catch (Exception $e) {
-            $this->logger->logError("Exception in transaction retrieval: " . $e->getMessage());
+        } catch (PDOException $e) {
+            $this->logger->error("Transaction retrieval error: " . $e->getMessage());
             return null;
         }
     }
 
-    // READ operation by MID
-    public function getByMid($mid)
+    public function getByMid(string $mid): array
     {
-        $sql = "SELECT * FROM transaction WHERE mid = $1";
-
+        $sql = "SELECT * FROM transaction WHERE mid = :mid";
         try {
-            $result = pg_query_params($this->db->getConnection(), $sql, [$mid]);
-
-            if ($result) {
-                $transactions = [];
-                while ($row = pg_fetch_assoc($result)) {
-                    $transactions[] = $row;
-                }
-                $this->logger->logInfo("Transactions fetched for MID: {$mid}");
-                return $transactions;
-            }
-
-            $this->logger->logError("Failed to fetch transactions for MID: {$mid}. SQL Error: " . pg_last_error($this->db->getConnection()));
-            return [];
-        } catch (Exception $e) {
-            $this->logger->logError("Exception in fetching transactions by MID: " . $e->getMessage());
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([':mid' => $mid]);
+            $transactions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $this->logger->info("Transactions fetched for MID: $mid");
+            return $transactions ?: [];
+        } catch (PDOException $e) {
+            $this->logger->error("Error fetching transactions by MID: " . $e->getMessage());
             return [];
         }
     }
 
-    // UPDATE operation
-    public function update($id, $data)
+    public function update(int $id, array $data): bool
     {
-        $updateFields = [];
-        $params = [];
-        $paramCount = 1;
-
-        foreach ($data as $key => $value) {
-            $updateFields[] = "$key = $" . $paramCount;
-            $params[] = $value;
-            $paramCount++;
-        }
-
-        $params[] = $id;
-
-        $sql = "UPDATE transaction SET " . implode(", ", $updateFields) . " WHERE id = $" . $paramCount;
+        $fields = array_map(fn($key) => "$key = :$key", array_keys($data));
+        $sql = "UPDATE transaction SET " . implode(', ', $fields) . " WHERE id = :id";
 
         try {
-            $result = pg_query_params($this->db->getConnection(), $sql, $params);
-
+            $stmt = $this->db->prepare($sql);
+            $params = array_combine(
+                array_map(fn($key) => ":$key", array_keys($data)),
+                array_values($data)
+            );
+            $params[':id'] = $id;
+            $result = $stmt->execute($params);
             if ($result) {
-                $this->logger->logInfo("Transaction updated with ID: {$id}");
+                $this->logger->info("Transaction updated with ID: $id");
                 return true;
             }
-
-            $this->logger->logError("Failed to update transaction with ID: {$id}. SQL Error: " . pg_last_error($this->db->getConnection()));
+            $this->logger->error("Failed to update transaction");
             return false;
-        } catch (Exception $e) {
-            $this->logger->logError("Exception in transaction update: " . $e->getMessage());
+        } catch (PDOException $e) {
+            $this->logger->error("Transaction update error: " . $e->getMessage());
             return false;
         }
     }
 
-    // DELETE operation
-    public function delete($id)
+    public function delete(int $id): bool
     {
-        $sql = "DELETE FROM transaction WHERE id = $1";
-
+        $sql = "DELETE FROM transaction WHERE id = :id";
         try {
-            $result = pg_query_params($this->db->getConnection(), $sql, [$id]);
-
+            $stmt = $this->db->prepare($sql);
+            $result = $stmt->execute([':id' => $id]);
             if ($result) {
-                $this->logger->logInfo("Transaction deleted with ID: {$id}");
+                $this->logger->info("Transaction deleted with ID: $id");
                 return true;
             }
-
-            $this->logger->logError("Failed to delete transaction with ID: {$id}. SQL Error: " . pg_last_error($this->db->getConnection()));
+            $this->logger->error("Failed to delete transaction");
             return false;
-        } catch (Exception $e) {
-            $this->logger->logError("Exception in transaction deletion: " . $e->getMessage());
+        } catch (PDOException $e) {
+            $this->logger->error("Transaction deletion error: " . $e->getMessage());
             return false;
         }
     }
 
-    // Get all transactions
-    public function getAll($limit = 50, $offset = 0, $select = ['*'], $filter = [], $order = [])
+    public function getAll(int $limit = 50, int $offset = 0, array $select = ['*'], array $filter = [], array $order = []): array
     {
-        $select = implode(',', $select);
-        // Build the WHERE clause from the filter array
-        $whereClauses = [];
+        $where = [];
         $params = [];
-        $paramCount = 1;
         foreach ($filter as $key => $value) {
-            $col = explode('|', $key)[0];
-            $operator = explode('|', $key)[1];
-            // for WHERE clause with IN operator
-            if (is_array($value)) {
-                $placeholders = implode(', ', array_map(function ($val) use (&$paramCount, &$params) {
-                    $params[] = $val;
-                    return '$' . $paramCount++;
-                }, $value));
-                $whereClauses[] = "$col $operator ($placeholders)";
+            [$col, $op] = explode('|', $key);
+            if ($op === 'IN' && is_array($value)) {
+                $placeholders = implode(', ', array_map(fn($i) => ":$col$i", range(1, count($value))));
+                $where[] = "$col IN ($placeholders)";
+                foreach ($value as $i => $val) {
+                    $params[":$col" . ($i + 1)] = $val;
+                }
+            } elseif ($op === 'ILIKE') {
+                $where[] = "$col ILIKE :$col";
+                $params[":$col"] = $value;
             } else {
-                $whereClauses[] = "$col $operator $" . $paramCount;
-                $params[] = $value;
-                $paramCount++;
+                $where[] = "$col = :$col";
+                $params[":$col"] = $value;
             }
         }
-        $whereSql = !empty($whereClauses) ? 'WHERE ' . implode(' AND ', $whereClauses) : '';
 
-        // Build the ORDER BY clause from the order array
-        $orderClauses = [];
-        foreach ($order as $key => $direction) {
-            $orderClauses[] = "$key $direction";
-        }
-        $orderSql = !empty($orderClauses) ? 'ORDER BY ' . implode(', ', $orderClauses) : '';
-
-        $sql = "
-            SELECT 
-                $select, 
-                COUNT(*) OVER() AS total_count, 
-                SUM(earnings_local_currency) OVER() AS total_earnings, 
-                SUM(commission) OVER() AS total_commission 
-            FROM transaction
-            $whereSql
-            $orderSql
-            LIMIT $" . $paramCount . " OFFSET $" . ($paramCount + 1);
+        $orderBy = array_map(fn($k, $v) => "$k $v", array_keys($order), $order);
+        $sql = sprintf(
+            "SELECT %s, COUNT(*) OVER() AS total_count, SUM(earnings_local_currency) OVER() AS total_earnings, 
+             SUM(commission) OVER() AS total_commission FROM transaction %s %s LIMIT :limit OFFSET :offset",
+            implode(',', $select),
+            $where ? 'WHERE ' . implode(' AND ', $where) : '',
+            $orderBy ? 'ORDER BY ' . implode(', ', $orderBy) : ''
+        );
 
         try {
-            $params[] = $limit;
-            $params[] = $offset;
-            $result = pg_query_params($this->db->getConnection(), $sql, $params);
+            $stmt = $this->db->prepare($sql);
+            $params[':limit'] = $limit;
+            $params[':offset'] = $offset;
+            $stmt->execute($params);
+            $transactions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            if ($result) {
-                $transactions = [];
-                while ($row = pg_fetch_assoc($result)) {
-                    $transactions[] = $row;
-                }
-                if (!empty($transactions)) {
-                    $totalCount = $transactions[0]['total_count'];
-                    $totalEarnings = $transactions[0]['total_earnings'];
-                    $totalCommission = $transactions[0]['total_commission'];
-                    $this->logger->logInfo("Fetched transactions. Limit: {$limit}, Offset: {$offset}");
-                    return ['transactions' => $transactions, 'total_count' => $totalCount, 'total_earnings' => $totalEarnings, 'total_commission' => $totalCommission];
-                }
+            if ($transactions) {
+                $this->logger->info("Fetched $limit transactions from offset $offset");
+                return [
+                    'transactions' => $transactions,
+                    'total_count' => $transactions[0]['total_count'],
+                    'total_earnings' => $transactions[0]['total_earnings'],
+                    'total_commission' => $transactions[0]['total_commission']
+                ];
             }
-
-            $this->logger->logError("Failed to fetch transactions. SQL Error: " . pg_last_error($this->db->getConnection()));
             return ['transactions' => [], 'total_count' => 0, 'total_earnings' => 0, 'total_commission' => 0];
-        } catch (Exception $e) {
-            $this->logger->logError("Exception in fetching transactions: " . $e->getMessage());
+        } catch (PDOException $e) {
+            $this->logger->error("Error fetching transactions: " . $e->getMessage());
             return ['transactions' => [], 'total_count' => 0, 'total_earnings' => 0, 'total_commission' => 0];
         }
     }

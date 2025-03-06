@@ -20,17 +20,18 @@ function getUsers($filter = [])
 function getUser($id)
 {
     $result = CRest::call('user.get', [
-        'ID' => $id // Changed 'id' to 'ID' to match Bitrix24 API parameter
+        'ID' => $id
     ]);
 
     if (!isset($result['result'][0])) {
-        return []; // Return empty array if no user found
+        return [];
     }
 
-    return $result['result'][0]; // Return first user since result is an array
+    return $result['result'][0];
 }
 
-function getCurrentUser(){
+function getCurrentUser()
+{
     $result = CRestCurrent::call('user.current')['result'];
     return $result['ID'];
 }
@@ -72,7 +73,7 @@ function field_map($field)
 function isAdmin()
 {
     $user_id = getCurrentUser();
-    if ($user_id === '1' || $user_id === '13') return true;
+    if ($user_id == '1') return true;
     return false;
 }
 
