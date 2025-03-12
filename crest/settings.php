@@ -1,6 +1,6 @@
 <?php
-// define('C_REST_CLIENT_ID','local.67739348994958.80669341');//Application ID
-// define('C_REST_CLIENT_SECRET','68zBxP5UBfBeIevYxRlCFPNUyeJ74yNWrPotwPrLnLwD0OIRKc');//Application key
+define('C_REST_CLIENT_ID','local.677f45e6232df7.41940894');//Application ID
+define('C_REST_CLIENT_SECRET','LLHXnPY5Ft4TzfS4QSTJ5cpu4wMNtCb1tWshEC176865QFSP87');//Application key
 // or
 define('C_REST_WEB_HOOK_URL','https://jiggle.5tel.co.uk/rest/1/efkimmryt7jw6i0c/');//url on creat Webhook
 

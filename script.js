@@ -166,6 +166,8 @@ function formatName(name) {
 function renderTable(data) {
   if (!data?.data) return;
 
+  console.log(data);
+
   const tbody = document.getElementById("tableBody");
   tbody.innerHTML = data.data
     .map((row, index) => {
