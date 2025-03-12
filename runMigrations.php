@@ -8,5 +8,5 @@ $db = new Database($config['db']);
 $migrations = new Migrations($db);
 
 $migrations->runMigrations();
-$db->closeConnection();
+// $db->closeConnection();
 ?>
