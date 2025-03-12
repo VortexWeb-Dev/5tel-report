@@ -166,8 +166,6 @@ function formatName(name) {
 function renderTable(data) {
   if (!data?.data) return;
 
-  console.log(data);
-
   const tbody = document.getElementById("tableBody");
   tbody.innerHTML = data.data
     .map((row, index) => {
@@ -214,7 +212,7 @@ function updateTotalEarnings(data) {
   const isAdmin = "<?php echo isAdmin() ?>" === "1";
   const value = isAdmin
     ? formatMoney(Number(data.total_earnings || 0).toFixed(2))
-    : formatMoney(Number(data.total_commission || 0).toFixed(2));
+    : formatMoney(Number(data.total_earnings || 0).toFixed(2));
   totalEarningsElement.textContent = value;
 }
 
