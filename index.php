@@ -175,7 +175,7 @@
                         </select>
                         <select id="statement_year" class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-blue-500" onchange="validateApplyButton()">
                             <option value="" disabled selected>Year</option>
-                            <?php foreach (range(date('Y'), 2020) as $year) echo "<option value='$year'>$year</option>"; ?>
+                            <?php foreach (range(date('Y'), 2024) as $year) echo "<option value='$year'>$year</option>"; ?>
                         </select>
                     </div>
                 </div>
